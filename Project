@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My E-commerce Store</h1>
+        <div class="cart">
+            <span>Cart (<span id="cart-count">0</span>)</span>
+            <div id="cart-items"></div>
+        </div>
+    </header>
+    <main>
+        <div class="product-list" id="product-list">
+            <!-- Products will be injected here by JavaScript -->
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
+
+//css
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.cart {
+    position: relative;
+}
+
+#cart-items {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.product {
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 200px;
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+}
+
+.product button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.product button:hover {
+    background-color: #555;
+}
+// javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const products = [
+        { id: 1, name: 'Product 1', price: 29.99, image: 'product1.jpg' },
+        { id: 2, name: 'Product 2', price: 19.99, image: 'product2.jpg' },
+        { id: 3, name: 'Product 3', price: 39.99, image: 'product3.jpg' },
+    ];
+
+    const productContainer = document.getElementById('product-list');
+    const cartCount = document.getElementById('cart-count');
+    const cartItems = document.getElementById('cart-items');
+
+    let cart = [];
+
+    products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.classList.add('product');
+        
+        productElement.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <h2>${product.name}</h2>
+            <p>$${product.price}</p>
+            <button data-id="${product.id}">Add to Cart</button>
+        `;
+
+        productContainer.appendChild(productElement);
+    });
+
+    productContainer.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            
+            cart.push(product);
+            cartCount.textContent = cart.length;
+
+            const cartItem = document.createElement('div');
+            cartItem.textContent = `${product.name} - $${product.price}`;
+            cartItems.appendChild(cartItem);
+        }
+    });
+
+    document.querySelector('.cart').addEventListener('click', () => {
+        cartItems.style.display = cartItems.style.display === 'block' ? 'none' : 'block';
+    });
+});
